@@ -12,13 +12,13 @@ export default [
   {
     path: '/login',
     name: 'Login',
-    meta: { layout: 'auth' },
+    meta: { isGuest: true, layout: 'auth' },
     component: Login
   },
   {
     path: '/register',
     name: 'Register',
-    meta: { layout: 'auth' },
+    meta: { isGuest: true, layout: 'auth' },
     component: () => import('@/views/Register.vue'),
   },
   {
