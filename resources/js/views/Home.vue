@@ -4,7 +4,7 @@
 
 <script setup>
 import { storeToRefs } from 'pinia'
-import { useMain } from '@/js/store'
+import { useMain } from '@/store'
 
 const mainStore = useMain()
 const { user } = storeToRefs(mainStore)
