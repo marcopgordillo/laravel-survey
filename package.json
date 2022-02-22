@@ -21,7 +21,7 @@
         "vue-loader": "^16.8.3"
     },
     "dependencies": {
-        "pinia": "^2.0.0-rc.10",
+        "pinia": "^2.0.11",
         "vue": "^3.2.31",
         "vue-router": "^4.0.12"
     }
