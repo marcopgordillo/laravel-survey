@@ -1,4 +1,4 @@
-import Home from '@/js/views/Home.vue'
+import Home from '@/views/Home.vue'
 // import NotFound from '@/js/views/NotFound.vue'
 // import Unauthorized from '@/js/views/Unauthorized.vue'
 

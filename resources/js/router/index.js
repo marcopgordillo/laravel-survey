@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import routes from './routes'
 
 const router = createRouter({
-  history: createWebHistory(process.env.MIX_BASE_URL),
+  history: createWebHistory(import.meta.env.MIX_BASE_URL),
   routes,
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
