@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AuthRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -21,7 +22,7 @@ class AuthController extends Controller
 
         return response([
             'data' => [
-                'user'  => $user,
+                'user'  => UserResource::make($user),
                 'token' => $token,
             ],
         ], Response::HTTP_CREATED);

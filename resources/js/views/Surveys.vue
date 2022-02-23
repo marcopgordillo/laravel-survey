@@ -5,6 +5,6 @@
 </template>
 
 <script setup>
-import PageComponent from '@/components/base/PageComponent.vue';
+import { PageComponent } from '@/components/base';
 
 </script>
