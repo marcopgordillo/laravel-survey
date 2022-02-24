@@ -1,10 +1,11 @@
-import vue from '@vitejs/plugin-vue';
-const { resolve } = require('path');
-const Dotenv = require('dotenv');
+import vue from '@vitejs/plugin-vue'
+import { defineConfig } from 'vite'
+const { resolve } = require('path')
+const Dotenv = require('dotenv')
 
-Dotenv.config();
+Dotenv.config()
 
-const ASSET_URL = process.env.ASSET_URL || '';
+const ASSET_URL = process.env.ASSET_URL || ''
 
 export default {
   plugins: [
@@ -43,5 +44,12 @@ export default {
       // '@inertiajs/progress',
       'axios'
     ]
+  },
+  test: {
+    // enable jest-like global test APIs
+    globals: true,
+    // simulate DOM with happy-dom
+    // (requires installing happy-dom as a peer dependency)
+    environment: 'happy-dom'
   }
 }
