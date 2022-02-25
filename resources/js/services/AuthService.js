@@ -1,5 +1,6 @@
 import axios from "axios"
 import { useAuthStore } from '@/store'
+import API from './API'
 
 export const authClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -21,8 +22,8 @@ authClient.interceptors.response.use(
 )
 
 export default {
-  logout() {
-    authClient.post('/logout')
+  async logout() {
+    return API.post('/logout')
   },
   async registerUser(payload) {
     await authClient.get('/sanctum/csrf-cookie')

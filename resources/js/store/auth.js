@@ -13,9 +13,11 @@ const useAuthStore = defineStore('auth', {
     getUser: state => state.user.data,
   },
   actions: {
-    logout() {
+    async logout() {
+      const { data } = await AuthService.logout()
       this.user.data = {}
       this.user.token = null
+      sessionStorage.removeItem('TOKEN')
     },
     async registerUser(payload) {
       const { data } = await AuthService.registerUser(payload)

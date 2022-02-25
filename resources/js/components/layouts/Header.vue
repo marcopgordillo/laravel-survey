@@ -105,8 +105,12 @@ const navigation = [
   { name: 'Surveys', to: {name: 'Surveys'} },
 ]
 
-function logout() {
-  authStore.logout()
-  router.push({name: 'Login'})
+async function logout() {
+  try {
+    await authStore.logout()
+    router.push({name: 'Login'})
+  } catch (err) {
+    //
+  }
 }
 </script>
