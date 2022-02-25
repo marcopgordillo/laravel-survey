@@ -60,7 +60,7 @@
         Sign up
       </button>
     </div>
-    <FlashMessage :error="error" />
+    <FlashMessage :error="error" @close="closeAlert" />
   </form>
 </template>
 
@@ -84,13 +84,16 @@ const user = reactive({
   password_confirmation: null,
 })
 
-function register() {
-  AuthService.registerUser(user)
-    .then((res) => {
-      authStore.saveUser(res.data)
-      router.push({name: 'Dashboard'})
-    })
-    .catch(err => error.value = getError(err))
+async function register() {
+  try {
+    await authStore.registerUser(user)
+    router.push({name: 'Dashboard'})
+  } catch (err) {
+    error.value = getError(err)
+  }
 }
 
+function closeAlert() {
+  error.value = null
+}
 </script>
