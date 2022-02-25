@@ -15,5 +15,6 @@
         @vite
     </head>
     <body class="antialiased h-full">
+        <div id="app" class="h-full"></div>
     </body>
 </html>

@@ -15,4 +15,4 @@ app.component('default-layout', DefaultLayout)
 app.component('auth-layout', AuthLayout)
 app.component('empty-layout', EmptyLayout)
 
-app.mount('body')
+app.mount('#app')
