@@ -76,7 +76,6 @@ const user = reactive({
 })
 
 async function login() {
-  console.log(user)
   try {
     await authStore.login(user)
     router.push({name: 'Dashboard'})

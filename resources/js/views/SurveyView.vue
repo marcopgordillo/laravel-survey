@@ -19,8 +19,8 @@
             </label>
             <div class="mt-1 flex items-center">
               <img
-                v-if="survey.image"
-                :src="survey.image"
+                v-if="survey.image_url"
+                :src="survey.image_url"
                 :alt="survey.title"
                 class="w-64 h-64 object-cover"
               />
@@ -33,6 +33,7 @@
               >
                 <input
                   id="image"
+                  @change="onImageUpload"
                   type="file"
                   class="absolute inset-0 opacity-0 cursor-pointer"
                 />
@@ -207,6 +208,19 @@ const saveSurvey = async () => {
   } catch (err) {
     console.error(err)
   }
+}
+
+const onImageUpload = (ev) => {
+  const file = ev.target.files[0]
+
+  const reader = new FileReader()
+  reader.onload = () => {
+    // to backend
+    survey.image = reader.result
+    // to display
+    survey.image_url = reader.result
+  }
+  reader.readAsDataURL(file)
 }
 
 </script>

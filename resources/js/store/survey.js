@@ -138,6 +138,7 @@ const useSurveyStore = defineStore('survey', {
   getters: {},
   actions: {
     async saveSurvey(survey) {
+      delete survey.image_url
       if (survey.id) { // update
         const { data } = await API.put(`/surveys/${survey.id}`, survey)
         this.surveys = this.surveys.map(
