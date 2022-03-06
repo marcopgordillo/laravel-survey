@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Survey;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreSurveyRequest extends FormRequest
@@ -13,7 +14,7 @@ class StoreSurveyRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return auth()->user()->can('create', Survey::class);
     }
 
     /**
@@ -24,7 +25,18 @@ class StoreSurveyRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'title'         => ['required', 'string', 'max:1000'],
+            'user_id'       => ['exists:users,id'],
+            'status'        => ['required', 'boolean'],
+            'description'   => ['optional', 'string'],
+            'expire_date'   => ['optional', 'date', 'after:tomorrow'],
         ];
+    }
+
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'user_id'   => $this->user()->id,
+        ]);
     }
 }

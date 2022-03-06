@@ -30,7 +30,8 @@ class SurveyPolicy
      */
     public function view(User $user, Survey $survey)
     {
-        //
+        return $user->tokenCan('surveys.show')
+                && $user->id === $survey->user->id;
     }
 
     /**
@@ -41,7 +42,7 @@ class SurveyPolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->tokenCan('surveys.create');
     }
 
     /**
@@ -53,7 +54,8 @@ class SurveyPolicy
      */
     public function update(User $user, Survey $survey)
     {
-        //
+        return $user->tokenCan('surveys.update')
+                && $user->id === $survey->user->id;
     }
 
     /**
@@ -65,7 +67,8 @@ class SurveyPolicy
      */
     public function delete(User $user, Survey $survey)
     {
-        //
+        return $user->tokenCan('surveys.delete')
+                && $user->id === $survey->user->id;
     }
 
     /**

@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreSurveyRequest;
 use App\Http\Requests\UpdateSurveyRequest;
+use App\Http\Resources\SurveyResource;
 use App\Models\Survey;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class SurveyController extends Controller
 {
@@ -13,9 +16,12 @@ class SurveyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $user = $request->user;
+        return SurveyResource::collection(
+            Survey::where('user_id', $user->id)->paginate()
+        );
     }
 
     /**
@@ -26,7 +32,9 @@ class SurveyController extends Controller
      */
     public function store(StoreSurveyRequest $request)
     {
-        //
+        $survey = Survey::create($request->validated());
+
+        return SurveyResource::make($survey);
     }
 
     /**
@@ -37,7 +45,8 @@ class SurveyController extends Controller
      */
     public function show(Survey $survey)
     {
-        //
+        $this->authorize('show', $survey);
+        return SurveyResource::make($survey);
     }
 
     /**
@@ -49,7 +58,9 @@ class SurveyController extends Controller
      */
     public function update(UpdateSurveyRequest $request, Survey $survey)
     {
-        //
+        $survey->update($request->validated());
+
+        return SurveyResource::make($survey);
     }
 
     /**
@@ -60,6 +71,10 @@ class SurveyController extends Controller
      */
     public function destroy(Survey $survey)
     {
-        //
+        $this->authorize('delete', $survey);
+
+        $survey->delete();
+
+        return response('', Response::HTTP_NO_CONTENT);
     }
 }

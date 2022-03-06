@@ -13,7 +13,7 @@ class UpdateSurveyRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return auth()->user()->can('update', [$this->survey]);
     }
 
     /**
