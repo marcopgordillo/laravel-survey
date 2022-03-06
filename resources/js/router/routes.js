@@ -33,6 +33,18 @@ export default [
     component: () => import('@/views/Dashboard.vue'),
   },
   {
+    path: '/surveys/create',
+    name: 'SurveyCreate',
+    meta: { requiresAuth: true },
+    component: () => import('@/views/SurveyView.vue'),
+  },
+  {
+    path: '/surveys/:id',
+    name: 'SurveyView',
+    meta: { requiresAuth: true },
+    component: () => import('@/views/SurveyView.vue'),
+  },
+  {
     path: '/surveys',
     name: 'Surveys',
     meta: { requiresAuth: true },
