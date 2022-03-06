@@ -146,7 +146,7 @@
 <script setup>
 import { reactive } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { v4 as uuidv4 } from 'uuid'
 import { PhotographIcon, PlusSmIcon } from '@heroicons/vue/outline'
 import { PageComponent } from '@/components/base'
@@ -154,6 +154,7 @@ import QuestionEditor from '@/components/editor/QuestionEditor.vue'
 import { useSurveyStore } from '@/store'
 
 const route = useRoute()
+const router = useRouter()
 const surveyStore = useSurveyStore()
 const { surveys } = storeToRefs(surveyStore)
 
@@ -194,6 +195,18 @@ const deleteQuestion = (question) => {
   survey.questions = survey.questions.filter(
     (q) => q !== question
   )
+}
+
+const saveSurvey = async () => {
+  try {
+    const data = await surveyStore.saveSurvey(survey)
+    router.push({
+      name: 'SurveyView',
+      params: { id: data.data.id },
+    })
+  } catch (err) {
+    console.error(err)
+  }
 }
 
 </script>

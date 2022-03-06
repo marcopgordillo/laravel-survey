@@ -28,8 +28,8 @@ class StoreSurveyRequest extends FormRequest
             'title'         => ['required', 'string', 'max:1000'],
             'user_id'       => ['exists:users,id'],
             'status'        => ['required', 'boolean'],
-            'description'   => ['optional', 'string'],
-            'expire_date'   => ['optional', 'date', 'after:tomorrow'],
+            'description'   => ['nullable', 'string'],
+            'expire_date'   => ['nullable', 'date', 'after:tomorrow'],
         ];
     }
 

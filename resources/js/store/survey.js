@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { API } from '@/services'
 
 const tmpSurveys = [
   {
@@ -135,7 +136,21 @@ const useSurveyStore = defineStore('survey', {
     questionTypes: ['text', 'select', 'radio', 'checkbox', 'textarea'],
   }),
   getters: {},
-  actions: {}
+  actions: {
+    async saveSurvey(survey) {
+      if (survey.id) { // update
+        const { data } = await API.put(`/surveys/${survey.id}`, survey)
+        this.surveys = this.surveys.map(
+          (s) => s.id === data.data.id ? data.data : s
+        )
+        return data
+      } else { // create
+        const { data } = await API.post('/surveys', survey)
+        this.surveys = [...this.surveys, data.data]
+        return data
+      }
+    },
+  }
 })
 
 export default useSurveyStore
