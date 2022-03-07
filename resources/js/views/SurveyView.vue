@@ -16,18 +16,7 @@
         </button>
       </div>
     </template>
-    <div
-      v-if="currentSurvey.loading"
-      class="flex items-center justify-center"
-    >
-      <div class="inline-flex px-4 py-2 font-semibold text-sm shadow rounded-md text-white bg-indigo-500">
-        <svg class="animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
-        loading...
-      </div>
-    </div>
+    <LoadingComponent v-if="currentSurvey.loading" />
     <!-- Survey Form -->
     <form v-else @submit.prevent="saveSurvey" class="animate-fade-in-down" novalidate>
       <div class="shadow sm:rounded-md sm:overflow-hidden">
@@ -172,7 +161,7 @@ import { storeToRefs } from 'pinia'
 import { useRoute, useRouter } from 'vue-router'
 import { v4 as uuidv4 } from 'uuid'
 import { PhotographIcon, PlusSmIcon, TrashIcon } from '@heroicons/vue/outline'
-import { PageComponent } from '@/components/base'
+import { PageComponent, LoadingComponent } from '@/components/base'
 import QuestionEditor from '@/components/editor/QuestionEditor.vue'
 import { useSurveyStore } from '@/store'
 

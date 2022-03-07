@@ -12,9 +12,10 @@
         </router-link>
       </div>
     </template>
-    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
+    <LoadingComponent v-if="surveys.loading" />
+    <div v-else class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
       <SurveyListItem
-        v-for="(survey, index) in surveys"
+        v-for="(survey, index) in surveys.data"
         :key="survey.id"
         :survey="survey"
         class="opacity-0 animate-fade-in-down"
@@ -29,25 +30,16 @@
 import { PlusIcon, PencilIcon } from '@heroicons/vue/outline'
 import { storeToRefs } from 'pinia'
 import { ref, watch } from 'vue'
-import { PageComponent } from '@/components/base'
+import { PageComponent, LoadingComponent } from '@/components/base'
 import { useSurveyStore } from '@/store'
 import SurveyListItem from '@/components/surveys/SurveyListItem.vue'
 
 const surveyStore = useSurveyStore()
 
+const { surveys } = storeToRefs(surveyStore)
+
 surveyStore.getSurveys()
 
-const { surveys: ObjectSurveys } = storeToRefs(surveyStore)
-const surveys = ref([])
-
-watch(
-  () => ObjectSurveys.value.data,
-  (newVal, oldVal) => {
-    surveys.value = [
-      ...JSON.parse(JSON.stringify(ObjectSurveys.value.data))
-    ]
-  }
-)
 const deleteSurvey = (survey) => {
   if (confirm("Are you sure you want to delete this survey? Operation can't be undone!")) {
     surveyStore.deleteSurvey(survey)
