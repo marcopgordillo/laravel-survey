@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\QuestionType;
+use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -16,7 +17,7 @@ class Question extends Model
     ];
 
     protected $casts = [
-        'data'      => 'array',
+        'data'      => AsArrayObject::class,
         'type'      => QuestionType::class,
     ];
 

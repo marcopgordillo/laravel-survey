@@ -6,9 +6,11 @@ use App\Enums\QuestionType;
 use App\Http\Requests\StoreSurveyRequest;
 use App\Http\Requests\UpdateSurveyRequest;
 use App\Http\Resources\SurveyResource;
+use App\Models\Question;
 use App\Models\Survey;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -92,7 +94,40 @@ class SurveyController extends Controller
 
         $survey->update($data);
 
-        return SurveyResource::make($survey);
+        // Get ids as plain array of existing questions
+        $existingIds = $survey->questions()->pluck('id')->toArray();
+
+        // Get ids as plain array of new questions
+        $newIds = Arr::pluck($data['questions'], 'id');
+
+        // Find questions to delete
+        $toDelete = array_diff($existingIds, $newIds);
+
+        // Find questions to add
+        $toAdd = array_diff($newIds, $existingIds);
+
+        // Delete questions by $toDelete Array
+        Question::destroy($toDelete);
+
+        // Create new questions
+        foreach($data['questions'] as $question) {
+            if (in_array($question['id'], $toAdd)) {
+                $question['survey_id'] = $survey->id;
+                $question = $this->validateQuestion($question);
+                $survey->questions()->create($question);
+            }
+        }
+
+        // Update existing questions
+        $questionMap = collect($data['questions'])->keyBy('id');
+        foreach($survey->questions as $question) {
+            if (isset($questionMap[$question->id])) {
+                $data = $this->validateUpdateQuestion($questionMap[$question->id]);
+                $question->update($data);
+            }
+        }
+
+        return SurveyResource::make($survey->load(['questions']));
     }
 
     /**
@@ -143,6 +178,20 @@ class SurveyController extends Controller
             'type'          => ['required', new Enum(QuestionType::class)],
             'description'   => ['nullable', 'string'],
             'data'          => ['present'],
+        ]);
+
+        return $validator->validated();
+    }
+
+    protected function validateUpdateQuestion($data)
+    {
+        $validator = Validator::make($data, [
+            'id'        => ['exists:App\Models\Question,id'],
+            'question'  => ['required', 'string'],
+            'type'          => ['required', new Enum(QuestionType::class)],
+            'description'   => ['nullable', 'string'],
+            'data'          => ['present'],
+
         ]);
 
         return $validator->validated();
