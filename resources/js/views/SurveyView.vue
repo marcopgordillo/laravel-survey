@@ -29,7 +29,7 @@
       </div>
     </div>
     <!-- Survey Form -->
-    <form v-else @submit.prevent="saveSurvey" novalidate>
+    <form v-else @submit.prevent="saveSurvey" class="animate-fade-in-down" novalidate>
       <div class="shadow sm:rounded-md sm:overflow-hidden">
         <!-- Survey Fields -->
         <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
