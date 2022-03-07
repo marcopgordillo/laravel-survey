@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\QuestionType;
 use App\Http\Requests\StoreSurveyRequest;
 use App\Http\Requests\UpdateSurveyRequest;
 use App\Http\Resources\SurveyResource;
@@ -10,7 +11,9 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\Enum;
 use Illuminate\Validation\ValidationException;
 
 class SurveyController extends Controller
@@ -22,7 +25,7 @@ class SurveyController extends Controller
      */
     public function index(Request $request)
     {
-        $user = $request->user;
+        $user = $request->user();
         return SurveyResource::collection(
             Survey::where('user_id', $user->id)->paginate()
         );
@@ -45,7 +48,14 @@ class SurveyController extends Controller
 
         $survey = Survey::create($data);
 
-        return SurveyResource::make($survey);
+        // Create new questions
+        foreach($data['questions'] as $question) {
+            $question['survey_id'] = $survey->id;
+            $question = $this->validateQuestion($question);
+            $survey->questions()->create($question);
+        }
+
+        return SurveyResource::make($survey->load(['questions']));
     }
 
     /**
@@ -56,8 +66,8 @@ class SurveyController extends Controller
      */
     public function show(Survey $survey)
     {
-        // $this->authorize('show', $survey);
-        return SurveyResource::make($survey);
+        $this->authorize('view', $survey);
+        return SurveyResource::make($survey->load('questions'));
     }
 
     /**
@@ -124,5 +134,17 @@ class SurveyController extends Controller
         $imageName = 'images/' . Str::random() . ".{$type}";
         Storage::put($imageName, $fileData);
         return $imageName;
+    }
+
+    protected function validateQuestion($data)
+    {
+        $validator = Validator::make($data, [
+            'question'      => ['required', 'string'],
+            'type'          => ['required', new Enum(QuestionType::class)],
+            'description'   => ['nullable', 'string'],
+            'data'          => ['present'],
+        ]);
+
+        return $validator->validated();
     }
 }

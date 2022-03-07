@@ -132,7 +132,10 @@ const tmpSurveys = [
 
 const useSurveyStore = defineStore('survey', {
   state: () => ({
-    surveys: [...tmpSurveys],
+    surveys: {
+      loading: false,
+      data: [],
+    },
     currentSurvey: {
       loading: false,
       data: null,
@@ -144,20 +147,25 @@ const useSurveyStore = defineStore('survey', {
     async saveSurvey(survey) {
       this.currentSurvey.loading = true
       delete survey.image_url
-      if (survey.id) { // update
-        const { data } = await API.put(`/surveys/${survey.id}`, survey)
-        this.currentSurvey.data = data.data
-        this.surveys = this.surveys.map(
-          (s) => s.id === data.data.id ? data.data : s
-        )
+      try {
+        if (survey.id) { // update
+          const { data } = await API.put(`/surveys/${survey.id}`, survey)
+          this.currentSurvey.data = data.data
+          this.surveys.data = this.surveys.data.map(
+            (s) => s.id === data.data.id ? data.data : s
+          )
+          this.currentSurvey.loading = false
+          return data
+        } else { // create
+          const { data } = await API.post('/surveys', survey)
+          this.currentSurvey.data = data.data
+          this.surveys.data = [...this.surveys.data, data.data]
+          this.currentSurvey.loading = false
+          return data
+        }
+      } catch (err) {
         this.currentSurvey.loading = false
-        return data
-      } else { // create
-        const { data } = await API.post('/surveys', survey)
-        this.currentSurvey.data = data.data
-        this.surveys = [...this.surveys, data.data]
-        this.currentSurvey.loading = false
-        return data
+        throw err
       }
     },
     async getSurvey(id) {
@@ -173,16 +181,27 @@ const useSurveyStore = defineStore('survey', {
         throw err
       }
     },
-    async deleteSurvey(id) {
+    async deleteSurvey(survey) {
       try {
-        const response = await API.delete(`/surveys/${id}`)
+        const response = await API.delete(`/surveys/${survey.id}`)
         if (response.status !== 204)
           throw new Error("Survey can't be removed.")
 
-        this.surveys = this.surveys.filter(s => s.id !== id)
+        this.surveys.data = this.surveys.data.filter(s => s.id !== survey.id)
         this.currentSurvey.data = {}
         return true
       } catch (err) {
+        throw err
+      }
+    },
+    async getSurveys() {
+      this.surveys.loading = true
+      try {
+        const { data } = await API.get('/surveys')
+        this.surveys.data = data.data
+        this.surveys.loading = false
+      } catch (err) {
+        this.surveys.loading = false
         throw err
       }
     }

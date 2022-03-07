@@ -132,7 +132,7 @@
             </button>
           </div>
           <div
-            v-if="!survey.questions.length"
+            v-if="!(survey.questions && survey.questions.length)"
             class="text-center text-gray-600"
           >
             You don't have any questions created
@@ -216,8 +216,8 @@ const addQuestion = (index) => {
   const newQuestion = {
     id: uuidv4(),
     type: 'text',
-    question: '',
-    description: 'null',
+    question: null,
+    description: null,
     data: {},
   }
 
@@ -257,7 +257,7 @@ const onImageUpload = (ev) => {
 
 const deleteSurvey = () => {
   if (confirm("Are you sure you want to delete this survey? Oparation can't be done")) {
-    surveyStore.deleteSurvey(survey.value.id)
+    surveyStore.deleteSurvey(survey.value)
     router.push({ name: 'Surveys' })
   }
 }

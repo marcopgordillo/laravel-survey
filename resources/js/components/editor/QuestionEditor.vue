@@ -133,7 +133,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue"
+import { ref, computed } from "vue"
 import { storeToRefs } from 'pinia'
 import { v4 as uuidv4 } from 'uuid'
 import { PlusSmIcon, TrashIcon } from '@heroicons/vue/outline'
@@ -153,7 +153,7 @@ const emit = defineEmits(['change', 'addQuestion', 'deleteQuestion'])
 // Re-create the whole question data to avoid unintentional reference change
 const question = ref(JSON.parse(JSON.stringify(props.question)))
 
-const shouldHaveOptions = () => ['select', 'radio', 'checkbox'].includes(question.value.type)
+const shouldHaveOptions = computed(() => ['select', 'radio', 'checkbox'].includes(question.value.type))
 
 const getOptions = () => question.value.data.options
 
@@ -170,7 +170,7 @@ const addOption = (option) => {
 const removeOption = (op) => setOptions(getOptions().filter((opt) => opt !== op))
 
 const typeChange = () => {
-  if (shouldHaveOptions()) {
+  if (shouldHaveOptions) {
     setOptions(getOptions() || [])
   }
   dataChange()
@@ -179,7 +179,7 @@ const typeChange = () => {
 const dataChange = () => {
   const data = JSON.parse(JSON.stringify(question.value))
 
-  if (!shouldHaveOptions()) {
+  if (!shouldHaveOptions) {
     delete data.data.options
   }
 
