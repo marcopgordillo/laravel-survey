@@ -21,7 +21,7 @@ class AuthController extends Controller
             'password'  => bcrypt($request->password),
         ]);
 
-        $token = $user->createToken('main')->plainTextToken;
+        $token = $user->createToken('main', ['*'])->plainTextToken;
 
         return response([
             'data' => [
@@ -45,7 +45,7 @@ class AuthController extends Controller
         );
 
         $user = Auth::user();
-        $token = $user->createToken('main')->plainTextToken;
+        $token = $user->createToken('main', ['*'])->plainTextToken;
 
         return response([
             'data' => [

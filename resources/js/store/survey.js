@@ -133,24 +133,59 @@ const tmpSurveys = [
 const useSurveyStore = defineStore('survey', {
   state: () => ({
     surveys: [...tmpSurveys],
+    currentSurvey: {
+      loading: false,
+      data: null,
+    },
     questionTypes: ['text', 'select', 'radio', 'checkbox', 'textarea'],
   }),
   getters: {},
   actions: {
     async saveSurvey(survey) {
+      this.currentSurvey.loading = true
       delete survey.image_url
       if (survey.id) { // update
         const { data } = await API.put(`/surveys/${survey.id}`, survey)
+        this.currentSurvey.data = data.data
         this.surveys = this.surveys.map(
           (s) => s.id === data.data.id ? data.data : s
         )
+        this.currentSurvey.loading = false
         return data
       } else { // create
         const { data } = await API.post('/surveys', survey)
+        this.currentSurvey.data = data.data
         this.surveys = [...this.surveys, data.data]
+        this.currentSurvey.loading = false
         return data
       }
     },
+    async getSurvey(id) {
+      this.currentSurvey.loading = true
+      try {
+        const { data } = await API.get(`/surveys/${id}`)
+        this.currentSurvey.data = data.data
+
+        this.currentSurvey.loading = false
+        return data
+      } catch (err) {
+        this.currentSurvey.loading = false
+        throw err
+      }
+    },
+    async deleteSurvey(id) {
+      try {
+        const response = await API.delete(`/surveys/${id}`)
+        if (response.status !== 204)
+          throw new Error("Survey can't be removed.")
+
+        this.surveys = this.surveys.filter(s => s.id !== id)
+        this.currentSurvey.data = {}
+        return true
+      } catch (err) {
+        throw err
+      }
+    }
   }
 })
 

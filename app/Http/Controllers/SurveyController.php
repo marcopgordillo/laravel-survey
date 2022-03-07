@@ -56,7 +56,7 @@ class SurveyController extends Controller
      */
     public function show(Survey $survey)
     {
-        $this->authorize('show', $survey);
+        // $this->authorize('show', $survey);
         return SurveyResource::make($survey);
     }
 
@@ -74,6 +74,10 @@ class SurveyController extends Controller
         if (isset($data['image'])) {
             $relativePath = $this->saveImage($data['image']);
             $data['image'] = $relativePath;
+
+            if ($survey->image) {
+                Storage::delete($survey->image);
+            }
         }
 
         $survey->update($data);
@@ -92,6 +96,10 @@ class SurveyController extends Controller
         $this->authorize('delete', $survey);
 
         $survey->delete();
+
+        if ($survey->image) {
+            Storage::delete($survey->image);
+        }
 
         return response('', Response::HTTP_NO_CONTENT);
     }

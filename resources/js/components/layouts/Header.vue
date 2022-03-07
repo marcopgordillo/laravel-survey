@@ -28,7 +28,8 @@
               <div>
                 <MenuButton class="max-w-xs bg-gray-800 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                   <span class="sr-only">Open user menu</span>
-                  <img class="h-8 w-8 rounded-full" :src="user.imageUrl" alt="" />
+                  <img v-if="user.imageUrl" class="h-8 w-8 rounded-full" :src="user.imageUrl" alt="" />
+                  <UserCircleIcon v-else class="h-8 w-8 text-gray-200" />
                 </MenuButton>
               </div>
               <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
@@ -92,7 +93,7 @@
 
 <script setup>
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { BellIcon, MenuIcon, XIcon } from '@heroicons/vue/outline'
+import { BellIcon, MenuIcon, XIcon, UserCircleIcon } from '@heroicons/vue/outline'
 import { useAuthStore } from '@/store'
 import { useRouter } from 'vue-router'
 

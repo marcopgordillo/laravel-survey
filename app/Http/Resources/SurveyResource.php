@@ -18,12 +18,12 @@ class SurveyResource extends JsonResource
         return [
             'id'            => $this->id,
             'title'         => $this->title,
-            'image_url'     => Storage::url($this->image),
+            'image_url'     => $this->image ? Storage::url($this->image) : null,
             'slug'          => $this->slug,
             'status'        => $this->status !== 'draft',
             'description'   => $this->description,
             'created_at'    => $this->created_at,
-            'updated_ad'    => $this->updated_at,
+            'updated_at'    => $this->updated_at,
             'expire_date'   => $this->expire_date,
             'questions'     => [],
         ];

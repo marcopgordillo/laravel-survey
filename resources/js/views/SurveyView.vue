@@ -3,12 +3,33 @@
     <template v-slot:header>
       <div class="flex justify-between items-center">
         <h1 class="text-3xl font-bold text-gray-900">
-          {{ survey.id ? survey.title : 'Create a Survey' }}
+          {{ route.params.id ? survey.title : 'Create a Survey' }}
         </h1>
+        <button
+          v-if="route.params.id"
+          @click="deleteSurvey"
+          type="button"
+          class="py-2 px-3 text-white bg-red-500 hover:bg-red-600 rounded-md"
+        >
+          <TrashIcon class="h-5 w-6 -mt-1 inline-block" />
+          Delete Survey
+        </button>
       </div>
     </template>
+    <div
+      v-if="currentSurvey.loading"
+      class="flex items-center justify-center"
+    >
+      <div class="inline-flex px-4 py-2 font-semibold text-sm shadow rounded-md text-white bg-indigo-500">
+        <svg class="animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        loading...
+      </div>
+    </div>
     <!-- Survey Form -->
-    <form @submit.prevent="saveSurvey" novalidate>
+    <form v-else @submit.prevent="saveSurvey" novalidate>
       <div class="shadow sm:rounded-md sm:overflow-hidden">
         <!-- Survey Fields -->
         <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
@@ -35,6 +56,7 @@
                   id="image"
                   @change="onImageUpload"
                   type="file"
+                  accept="image/*"
                   class="absolute inset-0 opacity-0 cursor-pointer"
                 />
                 Change
@@ -145,11 +167,11 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue'
+import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRoute, useRouter } from 'vue-router'
 import { v4 as uuidv4 } from 'uuid'
-import { PhotographIcon, PlusSmIcon } from '@heroicons/vue/outline'
+import { PhotographIcon, PlusSmIcon, TrashIcon } from '@heroicons/vue/outline'
 import { PageComponent } from '@/components/base'
 import QuestionEditor from '@/components/editor/QuestionEditor.vue'
 import { useSurveyStore } from '@/store'
@@ -157,25 +179,35 @@ import { useSurveyStore } from '@/store'
 const route = useRoute()
 const router = useRouter()
 const surveyStore = useSurveyStore()
-const { surveys } = storeToRefs(surveyStore)
+const { surveys, currentSurvey } = storeToRefs(surveyStore)
 
-let survey = reactive({
-  title: '',
+let survey = ref({
+  id: null,
+  title: null,
   status: false,
   description: null,
   image: null,
+  image_url: null,
   expire_date: null,
   questions: [],
 })
 
+watch(
+  () => currentSurvey.value.data,
+  (newVal, oldVal) => {
+    survey.value = {
+      ...JSON.parse(JSON.stringify(newVal)),
+      status: newVal.status !== 'draft',
+    }
+  }
+)
+
 if (route.params.id) {
-  survey = surveys.value.find(
-    (s) => s.id === +route.params.id
-  ) ?? survey
+  surveyStore.getSurvey(route.params.id)
 }
 
 const questionChange = (question) => {
-  survey.questions = survey.questions.map(
+  survey.value.questions = survey.value.questions.map(
     (q) => q.id === question.id ? JSON.parse(JSON.stringify(question)) : q
   )
 }
@@ -189,18 +221,18 @@ const addQuestion = (index) => {
     data: {},
   }
 
-  survey.questions.splice(index, 0, newQuestion)
+  survey.value.questions.splice(index, 0, newQuestion)
 }
 
 const deleteQuestion = (question) => {
-  survey.questions = survey.questions.filter(
+  survey.value.questions = survey.value.questions.filter(
     (q) => q !== question
   )
 }
 
 const saveSurvey = async () => {
   try {
-    const data = await surveyStore.saveSurvey(survey)
+    const data = await surveyStore.saveSurvey(survey.value)
     router.push({
       name: 'SurveyView',
       params: { id: data.data.id },
@@ -216,11 +248,18 @@ const onImageUpload = (ev) => {
   const reader = new FileReader()
   reader.onload = () => {
     // to backend
-    survey.image = reader.result
+    survey.value.image = reader.result
     // to display
-    survey.image_url = reader.result
+    survey.value.image_url = reader.result
   }
   reader.readAsDataURL(file)
+}
+
+const deleteSurvey = () => {
+  if (confirm("Are you sure you want to delete this survey? Oparation can't be done")) {
+    surveyStore.deleteSurvey(survey.value.id)
+    router.push({ name: 'Surveys' })
+  }
 }
 
 </script>
