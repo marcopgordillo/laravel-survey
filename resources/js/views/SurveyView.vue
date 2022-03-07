@@ -233,6 +233,10 @@ const deleteQuestion = (question) => {
 const saveSurvey = async () => {
   try {
     const data = await surveyStore.saveSurvey(survey.value)
+    surveyStore.notify({
+      type: 'success',
+      message: 'Survey was successfully updated!'
+    })
     router.push({
       name: 'SurveyView',
       params: { id: data.data.id },

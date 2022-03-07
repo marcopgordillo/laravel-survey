@@ -141,6 +141,11 @@ const useSurveyStore = defineStore('survey', {
       data: null,
     },
     questionTypes: ['text', 'select', 'radio', 'checkbox', 'textarea'],
+    notification: {
+      show: false,
+      message: null,
+      type: null,
+    },
   }),
   getters: {},
   actions: {
@@ -204,6 +209,12 @@ const useSurveyStore = defineStore('survey', {
         this.surveys.loading = false
         throw err
       }
+    },
+    notify({ message, type }) {
+      this.notification.show = true
+      this.notification.type = type
+      this.notification.message = message
+      setTimeout(() => this.notification.show = false, 3000)
     }
   }
 })

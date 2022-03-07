@@ -1,12 +1,14 @@
 <template>
     <component :is="layout">
         <router-view />
+        <Notification />
     </component>
 </template>
 
 <script setup>
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { Notification } from '@/components/base';
 
 const defaultLayout = 'default'
 
