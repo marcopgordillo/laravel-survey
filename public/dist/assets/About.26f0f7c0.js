@@ -1,0 +1,1 @@
+import{b as o}from"./app.e38c5fff.js";import{o as t,a as e}from"./vendor.b6c77bf0.js";const r={},c={class:"text-2xl font-bold"};function s(a,n){return t(),e("h1",c,"About")}var l=o(r,[["render",s]]);export{l as default};
