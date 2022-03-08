@@ -102,8 +102,15 @@ const useSurveyStore = defineStore('survey', {
         throw err
       }
     },
-    saveSurveyAnswers({surveyId, answers}) {
-      //
+    async saveSurveyAnswers({surveyId, answers}) {
+      this.currentSurvey.loading = true
+      try {
+        await API.post(`/surveys/${surveyId}/answers`, { answers })
+        this.currentSurvey.loading = false
+      } catch (err) {
+        this.currentSurvey.loading = false
+        throw err
+      }
     },
   }
 })

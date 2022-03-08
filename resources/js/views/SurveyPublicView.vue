@@ -73,10 +73,10 @@ const answers = ref({})
 surveyStore.getSurveyBySlug(route.params.slug)
 
 const submitSurvey = async () => {
-  console.log(JSON.stringify(answers.value, undefined, 2))
+  // console.log(JSON.stringify(answers.value, undefined, 2))
   try {
     await surveyStore.saveSurveyAnswers({
-      surveyId: survey.value.id,
+      surveyId: currentSurvey.value.data.id,
       answers: answers.value,
     })
     surveyFinished.value = true

@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Enums\QuestionType;
+use App\Http\Requests\StoreAnswerRequest;
 use App\Http\Requests\StoreSurveyRequest;
 use App\Http\Requests\UpdateSurveyRequest;
 use App\Http\Resources\SurveyResource;
+use App\Models\Answer;
 use App\Models\Question;
+use App\Models\QuestionAnswer;
 use App\Models\Survey;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -58,6 +61,41 @@ class SurveyController extends Controller
         }
 
         return SurveyResource::make($survey->load(['questions']));
+    }
+
+    public function storeAnswers(StoreAnswerRequest $request, Survey $survey)
+    {
+        $validated = $request->validated();
+
+        $surveyAnswer = Answer::create([
+            'survey_id'     => $survey->id,
+            'start_date'    => date('Y-m-d H:i:s'),
+            'end_date'      => date('Y-m-d H:i:s'),
+        ]);
+
+        foreach($validated['answers'] as $questionId => $answer) {
+            $question = Question::where([
+                'id'        => $questionId,
+                'survey_id' => $survey->id
+            ])->get();
+
+            throw_if(
+                !$question,
+                ValidationException::withMessages([
+                    'question' => "Invalid question ID: {$questionId}"
+                ])
+            );
+
+            $data = [
+                'question_id'   => $questionId,
+                'answer_id'     => $surveyAnswer->id,
+                'answer'        => $answer,
+            ];
+
+            QuestionAnswer::create($data);
+        }
+
+        return response('', Response::HTTP_CREATED);
     }
 
     /**
