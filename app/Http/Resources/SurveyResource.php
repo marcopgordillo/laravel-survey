@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 
 class SurveyResource extends JsonResource
@@ -22,10 +23,14 @@ class SurveyResource extends JsonResource
             'slug'          => $this->slug,
             'status'        => $this->status !== 'draft',
             'description'   => $this->description,
-            'created_at'    => $this->created_at,
-            'updated_at'    => $this->updated_at,
-            'expire_date'   => $this->expire_date,
+            'created_at'    => (new \DateTime($this->created_at))->format('Y-m-d H:i:s'),
+            'expire_date'   => (new \DateTime($this->expire_date))->format('Y-m-d'),
             'questions'     => QuestionResource::collection($this->whenLoaded('questions')),
+            $this->merge(
+                Arr::except(parent::toArray($request), [
+                    'user_id', 'updated_at', 'created_at', 'expire_date', 'image', 'status'
+                ])
+            ),
         ];
     }
 }

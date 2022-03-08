@@ -36,12 +36,24 @@
         />
         <h2 class="text-xl font-bold mb-3">{{ dashboard.data.latestSurvey.title }}</h2>
         <div class="flex justify-between text-sm mb-1">
-          <div>Upload date:</div>
+          <div>Create date:</div>
           <div>{{ dashboard.data.latestSurvey.created_at }}</div>
+        </div>
+        <div class="flex justify-between text-sm mb-1">
+          <div>Expire date:</div>
+          <div>{{ dashboard.data.latestSurvey.expire_date }}</div>
+        </div>
+        <div class="flex justify-between text-sm mb-1">
+          <div>Status:</div>
+          <div>{{ dashboard.data.latestSurvey.status ? 'Active' : 'Draft' }}</div>
+        </div>
+        <div class="flex justify-between text-sm mb-1">
+          <div>Questions:</div>
+          <div>{{ dashboard.data.latestSurvey.questions_count }}</div>
         </div>
         <div class="flex justify-between text-sm mb-3">
           <div>Answers:</div>
-          <div>{{ dashboard.data.totalAnswers }}</div>
+          <div>{{ dashboard.data.latestSurvey.answers_count }}</div>
         </div>
         <div class="flex justify-between">
           <router-link

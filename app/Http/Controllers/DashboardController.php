@@ -23,6 +23,7 @@ class DashboardController extends Controller
         $latest = Survey::query()
                 ->where('user_id', $user->id)
                 ->latest('created_at')
+                ->withCount(['questions', 'answers'])
                 ->first();
 
         // Total number of answers
@@ -41,7 +42,7 @@ class DashboardController extends Controller
 
         return [
             'totalSurveys'  => $totalSurveys,
-            'latestSurvey'  => $latest ? SurveyResource::make($latest->load(['questions'])) : null,
+            'latestSurvey'  => $latest ? SurveyResource::make($latest) : null,
             'totalAnswers'  => $totalAnswers,
             'latestAnswers' => AnswerResource::collection($latestAnswers),
         ];
