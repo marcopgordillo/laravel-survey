@@ -5,6 +5,7 @@ const useSurveyStore = defineStore('survey', {
   state: () => ({
     surveys: {
       loading: false,
+      links: [],
       data: [],
     },
     currentSurvey: {
@@ -70,11 +71,13 @@ const useSurveyStore = defineStore('survey', {
         throw err
       }
     },
-    async getSurveys() {
+    async getSurveys({ url = null } = {}) {
+      url = url || '/surveys'
       this.surveys.loading = true
       try {
-        const { data } = await API.get('/surveys')
+        const { data } = await API.get(url)
         this.surveys.data = data.data
+        this.surveys.links = data.meta.links
         this.surveys.loading = false
       } catch (err) {
         this.surveys.loading = false
