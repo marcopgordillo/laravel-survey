@@ -51,6 +51,12 @@ export default [
     component: () => import('@/views/Surveys.vue'),
   },
   {
+    path: '/view/survey/:slug',
+    name: 'SurveyPublicView',
+    meta: { layout: 'empty' },
+    component: () => import('@/views/SurveyPublicView.vue'),
+  },
+  {
     path: "/unauthorized",
     name: "Unauthorized",
     meta: { layout: 'empty' },

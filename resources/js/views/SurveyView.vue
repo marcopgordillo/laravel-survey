@@ -16,7 +16,7 @@
         </button>
       </div>
     </template>
-    <LoadingComponent v-if="currentSurvey.loading" />
+    <loading-component v-if="currentSurvey.loading"></loading-component>
     <!-- Survey Form -->
     <form v-else @submit.prevent="saveSurvey" class="animate-fade-in-down" novalidate>
       <div class="shadow sm:rounded-md sm:overflow-hidden">
@@ -161,7 +161,7 @@ import { storeToRefs } from 'pinia'
 import { useRoute, useRouter } from 'vue-router'
 import { v4 as uuidv4 } from 'uuid'
 import { PhotographIcon, PlusSmIcon, TrashIcon } from '@heroicons/vue/outline'
-import { PageComponent, LoadingComponent } from '@/components/base'
+import { PageComponent } from '@/components/base'
 import QuestionEditor from '@/components/editor/QuestionEditor.vue'
 import { useSurveyStore } from '@/store'
 

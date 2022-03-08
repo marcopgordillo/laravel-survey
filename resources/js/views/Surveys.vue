@@ -12,7 +12,7 @@
         </router-link>
       </div>
     </template>
-    <LoadingComponent v-if="surveys.loading" />
+    <loading-component v-if="surveys.loading"></loading-component>
     <div v-else>
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
         <SurveyListItem
@@ -52,7 +52,7 @@
 import { PlusIcon, PencilIcon } from '@heroicons/vue/outline'
 import { storeToRefs } from 'pinia'
 import { ref, computed } from 'vue'
-import { PageComponent, LoadingComponent } from '@/components/base'
+import { PageComponent } from '@/components/base'
 import { useSurveyStore } from '@/store'
 import SurveyListItem from '@/components/surveys/SurveyListItem.vue'
 

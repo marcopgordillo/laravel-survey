@@ -72,6 +72,11 @@ class SurveyController extends Controller
         return SurveyResource::make($survey->load('questions'));
     }
 
+    public function showForGuest(Survey $survey)
+    {
+        return SurveyResource::make($survey->load('questions'));
+    }
+
     /**
      * Update the specified resource in storage.
      *

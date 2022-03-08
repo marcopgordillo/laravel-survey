@@ -89,7 +89,22 @@ const useSurveyStore = defineStore('survey', {
       this.notification.type = type
       this.notification.message = message
       setTimeout(() => this.notification.show = false, 3000)
-    }
+    },
+    async getSurveyBySlug(slug) {
+      this.currentSurvey.loading = true
+      try {
+        const { data } = await API.get(`/survey-by-slug/${slug}`)
+        this.currentSurvey.data = data.data
+        this.currentSurvey.loading = false
+        return data
+      } catch (err) {
+        this.currentSurvey.loading = false
+        throw err
+      }
+    },
+    saveSurveyAnswers({surveyId, answers}) {
+      //
+    },
   }
 })
 

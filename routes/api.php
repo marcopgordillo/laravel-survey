@@ -25,6 +25,7 @@ Route::prefix('v1')->group(function() {
         Route::resource('surveys', SurveyController::class);
     });
 
+    Route::get('/survey-by-slug/{survey:slug}', [SurveyController::class, 'showForGuest'])->name('surveys.by_slug');
     Route::post('/register', [AuthController::class, 'register'])->name('auth.register');
     Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
 });
