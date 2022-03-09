@@ -1,6 +1,6 @@
 {
   "js/app.js": {
-    "file": "assets/app.493a5684.js",
+    "file": "assets/app.3420cf6e.js",
     "src": "js/app.js",
     "isEntry": true,
     "imports": [
@@ -22,7 +22,7 @@
     "file": "assets/vendor.80495a89.js"
   },
   "js/views/Register.vue": {
-    "file": "assets/Register.46b63702.js",
+    "file": "assets/Register.816723a6.js",
     "src": "js/views/Register.vue",
     "isDynamicEntry": true,
     "imports": [
@@ -31,7 +31,7 @@
     ]
   },
   "js/views/About.vue": {
-    "file": "assets/About.7bf6046d.js",
+    "file": "assets/About.82143190.js",
     "src": "js/views/About.vue",
     "isDynamicEntry": true,
     "imports": [
@@ -40,7 +40,7 @@
     ]
   },
   "js/views/Dashboard.vue": {
-    "file": "assets/Dashboard.66b55d58.js",
+    "file": "assets/Dashboard.14e9b6fb.js",
     "src": "js/views/Dashboard.vue",
     "isDynamicEntry": true,
     "imports": [
@@ -56,7 +56,7 @@
     ]
   },
   "js/views/SurveyView.vue": {
-    "file": "assets/SurveyView.4ff50196.js",
+    "file": "assets/SurveyView.7f325144.js",
     "src": "js/views/SurveyView.vue",
     "isDynamicEntry": true,
     "imports": [
@@ -66,7 +66,7 @@
     ]
   },
   "js/views/Surveys.vue": {
-    "file": "assets/Surveys.9778943a.js",
+    "file": "assets/Surveys.248854c8.js",
     "src": "js/views/Surveys.vue",
     "isDynamicEntry": true,
     "imports": [
@@ -76,7 +76,7 @@
     ]
   },
   "js/views/SurveyPublicView.vue": {
-    "file": "assets/SurveyPublicView.5e4fc271.js",
+    "file": "assets/SurveyPublicView.93999ef6.js",
     "src": "js/views/SurveyPublicView.vue",
     "isDynamicEntry": true,
     "imports": [
