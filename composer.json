@@ -12,6 +12,7 @@
         "laravel/sanctum": "^2.14",
         "laravel/tinker": "^2.7",
         "ohseesoftware/laravel-vite-manifest": "^1.2",
+        "spatie/flysystem-dropbox": "^2.0",
         "spatie/laravel-sluggable": "^3.3"
     },
     "require-dev": {
